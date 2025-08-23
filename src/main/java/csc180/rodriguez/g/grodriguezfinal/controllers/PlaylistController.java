@@ -1,9 +1,9 @@
-package csc180.rodriguez.g.grodriguezfinal;
+package csc180.rodriguez.g.grodriguezfinal.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class PlaylistController {
     @FXML
     private Label welcomeText;
 

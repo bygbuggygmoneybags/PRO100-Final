@@ -7,5 +7,8 @@ module csc180.rodriguez.g.grodriguezfinal {
     requires org.kordamp.bootstrapfx.core;
 
     opens csc180.rodriguez.g.grodriguezfinal to javafx.fxml;
-    exports csc180.rodriguez.g.grodriguezfinal;
+    exports csc180.rodriguez.g.grodriguezfinal.controllers;
+    opens csc180.rodriguez.g.grodriguezfinal.controllers to javafx.fxml;
+    exports csc180.rodriguez.g.grodriguezfinal.views;
+    opens csc180.rodriguez.g.grodriguezfinal.views to javafx.fxml;
 }

@@ -81,7 +81,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                csc180.rodriguez.g.grodriguezfinal/csc180.rodriguez.g.grodriguezfinal.HelloApplication
+                                csc180.rodriguez.g.grodriguezfinal/csc180.rodriguez.g.grodriguezfinal.views.PlaylistGUI
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
