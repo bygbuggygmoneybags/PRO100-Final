@@ -1,10 +1,8 @@
 package csc180.rodriguez.g.grodriguezfinal.models;
 
-import java.util.List;
-
 public interface PlaylistFunction {
     void createPlaylist(Playlists playlist);
-    void removePlaylist(Playlists playlist);
-    Playlists getPlaylist(int id);
-    List<Playlists> getAllPlaylists();
+    void removePlaylist(String name);
+    Playlists getPlaylist(String name);
+    void getAllPlaylists();
 }

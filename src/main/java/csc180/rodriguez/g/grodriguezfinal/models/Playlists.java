@@ -29,8 +29,11 @@ public class Playlists {
         this.description = description;
     }
 
-    public Playlists(int id, String name, String description) {
-        setId(id);
+    public Playlists(String name) {
+        setName(name);
+    }
+
+    public Playlists(String name, String description) {
         setName(name);
         setDescription(description);
     }

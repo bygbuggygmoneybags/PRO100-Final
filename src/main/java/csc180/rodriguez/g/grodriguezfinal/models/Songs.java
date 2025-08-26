@@ -56,8 +56,11 @@ public class Songs {
         this.length = length;
     }
 
-    public Songs(int id, String title, String artist, String album, String genre, String length) {
-        setId(id);
+    public Songs(String title) {
+        setTitle(title);
+    }
+
+    public Songs(String title, String artist, String album, String genre, String length) {
         setTitle(title);
         setArtist(artist);
         setAlbum(album);
