@@ -3,10 +3,15 @@ package csc180.rodriguez.g.grodriguezfinal.controllers;
 import csc180.rodriguez.g.grodriguezfinal.DBConnect;
 import csc180.rodriguez.g.grodriguezfinal.models.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -88,7 +93,11 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             descPopup.setContentText("Description: ");
             Optional<String> desc = descPopup.showAndWait();
             if(desc.isPresent()) {
-                description = desc.get();
+                if (desc.isEmpty()) {
+                    description = "No description";
+                } else {
+                    description = desc.get();
+                }
             } else {
                 Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("Error");
@@ -227,7 +236,11 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             albumPopup.setContentText("Album: ");
             Optional<String> albums = albumPopup.showAndWait();
             if(albums.isPresent()) {
-                album = albums.get();
+                if(albums.isEmpty()) {
+                    album = "Single";
+                } else {
+                    album = albums.get();
+                }
             } else {
                 Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("Error");
@@ -386,7 +399,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
     @FXML
     private void clickShowSong() {
-        showSong.setOnAction(e -> {
+        showSong.setOnAction (e -> {
             String name = "";
 
             TextInputDialog namePopup = new TextInputDialog();
@@ -403,7 +416,21 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
                 dialog.setContentText("Input was cancelled by user");
             }
             namePopup.close();
-            getSong(name);
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
+                Parent root = loader.load();
+
+                ViewController viewController = loader.getController();
+                viewController.setPlaylist(playlistsView.getSelectionModel().getSelectedItem());
+                viewController.setSong(getSong(name));
+
+                Stage stage = new Stage();
+                stage.setTitle("Viewing Searched Song");
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
         });
     }
 
@@ -421,7 +448,20 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     @FXML
     private void clickShowSongs() {
         showSongs.setOnAction(e -> {
-            getAllSongs();
+            try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
+            Parent root = loader.load();
+
+            ViewController viewController = loader.getController();
+            viewController.setSongsListView(songsInPlaylist);
+
+            Stage stage = new Stage();
+            stage.setTitle("Viewing all Songs");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
         });
     }
 
@@ -460,8 +500,21 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
                 dialog.setTitle("Error");
                 dialog.setHeaderText("Input error");
             }
+            try {
             namePopup.close();
-            getPlaylist(name);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
+            Parent root = loader.load();
+
+            ViewController viewController = loader.getController();
+            viewController.setPlaylist(getPlaylist(name));
+
+            Stage stage = new Stage();
+            stage.setTitle("Viewing Searched Playlist");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
         });
     }
 
@@ -478,6 +531,21 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
     @FXML
     private void clickShowPlaylists() {
-        showPlaylists.setOnAction(e -> getAllPlaylists());
+        showPlaylists.setOnAction(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
+                Parent root = loader.load();
+
+                ViewController viewController = loader.getController();
+                viewController.setPlaylistsListView(playlistsView);
+
+                Stage stage = new Stage();
+                stage.setTitle("Viewing all Playlists");
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        });
     }
 }
