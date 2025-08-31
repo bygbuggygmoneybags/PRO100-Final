@@ -19,7 +19,7 @@
     <BorderPane fx:id="toolBarPane" prefHeight="1000" prefWidth="850">
         <top>
             <ToolBar fx:id="toolBar">
-                <Button fx:id="create" text="Create" onAction="#clickCreate">
+                <Button fx:id="create" text="Create" onMouseClicked="#clickCreate">
                     <contextMenu>
                         <ContextMenu fx:id="createMenu" >
                             <items>
@@ -30,7 +30,7 @@
                         </ContextMenu>
                     </contextMenu>
                 </Button>
-                <Button fx:id="edit" text="Edit" onAction="#clickEdit">
+                <Button fx:id="edit" text="Edit" onMouseClicked="#clickEdit">
                     <contextMenu>
                         <ContextMenu fx:id="editMenu">
                             <items>
@@ -47,7 +47,7 @@
                         </ContextMenu>
                     </contextMenu>
                 </Button>
-                <Button fx:id="view" text="View" onAction="#clickView">
+                <Button fx:id="view" text="View" onMouseClicked="#clickView">
                     <contextMenu>
                         <ContextMenu fx:id="viewMenu">
                             <items>
@@ -80,8 +80,11 @@
 
             </ListView>
         </left>
+        <ListView fx:id="songsInPlaylist" visible="false" BorderPane.alignment="BOTTOM_CENTER">
+
+        </ListView>
         <bottom>
-            <ListView fx:id="songsInPlaylist" BorderPane.alignment="BOTTOM_CENTER">
+            <ListView fx:id="songsPlaylist" maxWidth="850" maxHeight="350" BorderPane.alignment="BOTTOM_CENTER">
 
             </ListView>
         </bottom>

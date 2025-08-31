@@ -9,13 +9,21 @@
     <padding>
         <Insets bottom="20.0"/>
     </padding>
-    <BorderPane fx:id="viewPane" prefHeight="800" prefWidth="600">
+    <BorderPane fx:id="viewPane" prefHeight="320" prefWidth="550">
         <top>
             <ToolBar fx:id="toolBar">
-                <Button fx:id="exit" text="Exit">
+                <Button fx:id="exit" text="Exit" onMouseClicked="#onExit">
 
                 </Button>
             </ToolBar>
         </top>
+        <center>
+            <ListView fx:id="songsInPlaylist"/>
+            <ListView fx:id="playlistsListView"/>
+            <ListView fx:id="songsListView"/>
+            <Label fx:id="songLabel"/>
+            <Label fx:id="playlistLabel"/>
+        </center>
+
     </BorderPane>
 </VBox>

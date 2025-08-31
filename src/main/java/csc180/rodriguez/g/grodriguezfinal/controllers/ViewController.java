@@ -6,16 +6,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+import java.util.List;
 
 public class ViewController {
     private Playlists playlist;
     private Songs song;
-    boolean searchedSong = false;
-    boolean allSongs = false;
-    boolean searchedPlaylist = false;
-    boolean allPlaylists = false;
+
     @FXML
-    private ListView<String> songsListView;
+    private ListView<Songs> songsInPlaylist;
+    @FXML
+    private ListView<Songs> songsListView;
     @FXML
     private ListView<Playlists> playlistsListView;
     @FXML
@@ -25,62 +27,37 @@ public class ViewController {
     @FXML
     private Label playlistLabel;
 
-    public void setPlaylist(Playlists playlist) {
+    public void setPlaylist(Playlists playlist, List<Songs> songs) {
         this.playlist = playlist;
-        searchedPlaylist = true;
+        playlistLabel.setText(playlist.toString());
+        songsInPlaylist.getItems().setAll(songs);
+
+        viewPane.setCenter(playlistLabel);
+        viewPane.setBottom(songsInPlaylist);
     }
 
     public void setSong(Songs song) {
         this.song = song;
-        searchedSong = true;
+        songLabel.setText(song.toString());
+
+        viewPane.setCenter(songLabel);
     }
 
-    public void setSongsListView(ListView<String> songsListView) {
-        this.songsListView = songsListView;
-        allSongs = true;
+    public void setSongsListView(List<Songs> songs) {
+        songsListView.getItems().setAll(songs);
+
+        viewPane.setCenter(songsListView);
     }
 
-    public void setPlaylistsListView(ListView<Playlists> playlistsListView) {
-        this.playlistsListView = playlistsListView;
-        allPlaylists = true;
-    }
+    public void setPlaylistsListView(List<Playlists> playlists) {
+        playlistsListView.getItems().setAll(playlists);
 
-    public Playlists getPlaylist() {
-        return playlist;
-    }
-
-    public Songs getSong() {
-        return song;
-    }
-
-    public ListView<String> getSongsListView() {
-        return songsListView;
-    }
-
-    public ListView<Playlists> getPlaylistsListView() {
-        return playlistsListView;
-    }
-
-    public void setSongLabel(Label songLabel) {
-        this.songLabel = songLabel;
-    }
-
-    public void setPlaylistLabel(Label playlistLabel) {
-        this.playlistLabel = playlistLabel;
+        viewPane.setCenter(playlistsListView);
     }
 
     @FXML
-    private void initialize() {
-        if (searchedSong) {
-            setSongLabel(new Label(getSong().toString()));
-            viewPane.setCenter(songLabel);
-        } else if (allSongs) {
-            viewPane.setCenter(getSongsListView());
-        } else if (searchedPlaylist) {
-            setPlaylistLabel(new Label(getPlaylist().toString()));
-            viewPane.setCenter(playlistLabel);
-        } else if (allPlaylists) {
-            viewPane.setCenter(getPlaylistsListView());
-        }
+    public void onExit() {
+        Stage stage = (Stage) viewPane.getScene().getWindow();
+        stage.close();
     }
 }

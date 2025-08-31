@@ -12,10 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PlaylistController implements PlaylistFunction, SongFunction, PlaylistSongsFunction {
@@ -24,7 +23,9 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     @FXML
     private ListView<Playlists> playlistsView;
     @FXML
-    private ListView<String> songsInPlaylist;
+    private ListView<Songs> songsInPlaylist;
+    @FXML
+    private ListView<Songs> songsPlaylist;
     @FXML
     private ToolBar toolBar;
     @FXML
@@ -43,7 +44,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     private MenuItem createPlaylistButton;
     @FXML
     private void clickCreate(){
-        create.setOnAction(e -> {
+        create.setOnMouseClicked(e -> {
             if(createMenu.isShowing()) {
                 createMenu.hide();
             } else {
@@ -56,10 +57,15 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     public void createPlaylist(Playlists playlist) {
         String sql = "INSERT INTO Playlists(Name,Description) VALUES (?,?)";
         try (Connection conn = DBConnect.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, playlist.getName());
             stmt.setString(2, playlist.getDescription());
             stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if(rs.next()) {
+                playlist.setId(rs.getInt(1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,11 +99,9 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             descPopup.setContentText("Description: ");
             Optional<String> desc = descPopup.showAndWait();
             if(desc.isPresent()) {
-                if (desc.isEmpty()) {
-                    description = "No description";
-                } else {
-                    description = desc.get();
-                }
+                description = desc.get();
+            } else if(desc.isEmpty()) {
+                description = "No description";
             } else {
                 Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("Error");
@@ -119,19 +123,22 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     private MenuItem removeSong;
     @FXML
     public void initialize() {
-        songsInPlaylist.setVisible(false);
+        songsPlaylist.setVisible(false);
         add.setDisable(true);
         removeSong.setDisable(true);
 
         playlistsView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             boolean hasPlaylist = newValue != null;
             add.setDisable(!hasPlaylist);
+            if(hasPlaylist) {
+                showSongsInPlaylist(newValue);
+            }
 
-            boolean hasSong = !songsInPlaylist.getSelectionModel().isEmpty();
+            boolean hasSong = !songsPlaylist.getSelectionModel().isEmpty();
             removeSong.setDisable(!hasPlaylist || !hasSong);
         });
 
-        songsInPlaylist.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        songsPlaylist.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             boolean hasPlaylist = playlistsView.getSelectionModel().getSelectedItem() != null;
             removeSong.setDisable(!hasPlaylist);
         });
@@ -140,7 +147,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     private MenuItem remove;
     @FXML
     private void clickEdit() {
-        edit.setOnAction(e -> {
+        edit.setOnMouseClicked(e -> {
             if(editMenu.isShowing()) {
                 editMenu.hide();
             } else {
@@ -149,16 +156,40 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
         });
     }
 
+    private void showSongsInPlaylist(Playlists playlist) {
+        List<Songs> songsList = getSongs(getPlaylist(playlist.getName()));
+        songsPlaylist.getItems().setAll(songsList);
+
+    }
+
     @Override
     public void addSong(Songs song) {
         String sql = "INSERT INTO Songs(Title,Artist,Album,Genre,Length) VALUES (?,?,?,?,?)";
         try(Connection conn = DBConnect.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1,song.getTitle());
             stmt.setString(2,song.getArtist());
             stmt.setString(3,song.getAlbum());
             stmt.setString(4,song.getGenre());
             stmt.setString(5,song.getLength());
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if(rs.next()) {
+                song.setId(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addSongToPlaylist(PlaylistSongs ps) {
+        String sql = "INSERT INTO PlaylistSongs(PlaylistID,SongID) VALUES (?,?)";
+        try(Connection conn = DBConnect.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1,ps.getPlaylistID());
+            stmt.setInt(2,ps.getSongID());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -166,16 +197,29 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     }
 
     @Override
-    public void addSongToPlaylist(int songId, int playlistId) {
-        String sql = "INSERT INTO PlaylistSongs(PlaylistID,SongID) VALUES (?,?)";
-        try(Connection conn = DBConnect.getConnection();
+    public List<Songs> getSongs(Playlists playlist) {
+        List<Songs> songs = new ArrayList<>();
+        String sql = "SELECT * " + "FROM Songs s " + "JOIN PlaylistSongs ps on s.SongID = ps.songID "
+                + "WHERE ps.playlistID = ?";
+        try(Connection conn=DBConnect.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1,playlistId);
-            stmt.setInt(2,songId);
-            stmt.executeUpdate();
+            stmt.setInt(1, playlist.getId());
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                Songs song = new Songs(
+                        rs.getString("Title"),
+                        rs.getString("Artist"),
+                        rs.getString("Album"),
+                        rs.getString("Genre"),
+                        rs.getString("Length")
+                );
+                song.setId(rs.getInt("SongID"));
+                songs.add(song);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return songs;
     }
 
     @Override
@@ -236,12 +280,11 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             albumPopup.setContentText("Album: ");
             Optional<String> albums = albumPopup.showAndWait();
             if(albums.isPresent()) {
-                if(albums.isEmpty()) {
-                    album = "Single";
-                } else {
-                    album = albums.get();
-                }
-            } else {
+                album = albums.get();
+
+            } else if(albums.isEmpty()) {
+                album = "Single";
+            }else {
                 Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("Error");
                 dialog.setHeaderText("Input error");
@@ -279,9 +322,10 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             }
             lengthPopup.close();
             addSong(new Songs(name, artist, album, genre, length));
-            songsInPlaylist.getItems().add(name);
-            addSongToPlaylist(getSong(name).getId(),getPlaylist(playlistsView.getSelectionModel().getSelectedItem().getName()).getId());
-            songsInPlaylist.setVisible(true);
+            songsInPlaylist.getItems().add(new Songs(name, artist, album, genre, length));
+            songsPlaylist.getItems().add(new Songs(name, artist, album, genre, length));
+            addSongToPlaylist(new PlaylistSongs(getPlaylist(playlistsView.getSelectionModel().getSelectedItem().getName()).getId(),getSong(name).getId()));
+            songsPlaylist.setVisible(true);
         });
     }
 
@@ -300,25 +344,10 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     @FXML
     private void clickRemoveSong() {
         removeSong.setOnAction(e -> {
-            String name = "";
-
-            TextInputDialog namePopup = new TextInputDialog();
-            namePopup.setTitle("Remove Song");
-            namePopup.setHeaderText("Type the name of the song you wish to remove:");
-            namePopup.setContentText("Name: ");
-            Optional<String> result = namePopup.showAndWait();
-            if (result.isPresent()) {
-                name = result.get();
-            } else {
-                Dialog<String> dialog = new Dialog<>();
-                dialog.setTitle("Error");
-                dialog.setHeaderText("Input error");
-                dialog.setContentText("Input was cancelled by user");
-            }
-            namePopup.close();
-            removeSong(name);
-            songsInPlaylist.getItems().remove(name);
-            removeSongFromPlaylist(getSong(name).getId(),getPlaylist(playlistsView.getSelectionModel().getSelectedItem().getName()).getId());
+            removeSong(songsPlaylist.getSelectionModel().getSelectedItem().getTitle());
+            songsInPlaylist.getItems().remove(songsPlaylist.getSelectionModel().getSelectedItem().getTitle());
+            removeSongFromPlaylist(songsPlaylist.getSelectionModel().getSelectedItem().getId(),playlistsView.getSelectionModel().getSelectedItem().getId());
+            songsPlaylist.getItems().remove(songsPlaylist.getSelectionModel().getSelectedItem());
         });
     }
 
@@ -337,23 +366,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     @FXML
     private void clickRemovePlaylist() {
         remove.setOnAction(e -> {
-            String name = "";
-
-            TextInputDialog namePopup = new TextInputDialog();
-            namePopup.setTitle("Remove Playlist");
-            namePopup.setHeaderText("Type the name of the playlist you wish to remove:");
-            namePopup.setContentText("Name: ");
-            Optional<String> result = namePopup.showAndWait();
-            if(result.isPresent()) {
-                name = result.get();
-            } else {
-                Dialog<String> dialog = new Dialog<>();
-                dialog.setTitle("Error");
-                dialog.setHeaderText("Input error");
-                dialog.setContentText("Input was cancelled by user");
-            }
-            namePopup.close();
-            removePlaylist(name);
+            removePlaylist(playlistsView.getSelectionModel().getSelectedItem().getName());
             playlistsView.getItems().remove(playlistsView.getSelectionModel().getSelectedItem());
         });
     }
@@ -370,7 +383,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     private MenuItem showPlaylists;
     @FXML
     private void clickView() {
-        view.setOnAction(e -> {
+        view.setOnMouseClicked(e -> {
             if(viewMenu.isShowing()) {
                 viewMenu.hide();
             } else {
@@ -384,11 +397,17 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
         String sql = "SELECT * FROM Songs WHERE Title = ?";
         try(Connection conn = DBConnect.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1,name);
+            stmt.setString(1,name.trim());
             try(ResultSet rs = stmt.executeQuery()) {
                 if(rs.next()) {
                     String songTitle = rs.getString("Title");
-                    return new Songs(songTitle);
+                    String artist = rs.getString("Artist");
+                    String album = rs.getString("Album");
+                    String genre = rs.getString("Genre");
+                    String length = rs.getString("Length");
+                    Songs song = new Songs(songTitle,artist,album,genre,length);
+                    song.setId(rs.getInt("SongID"));
+                    return song;
                 }
             }
         } catch (SQLException e) {
@@ -421,12 +440,12 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
                 Parent root = loader.load();
 
                 ViewController viewController = loader.getController();
-                viewController.setPlaylist(playlistsView.getSelectionModel().getSelectedItem());
+                viewController.setPlaylist(playlistsView.getSelectionModel().getSelectedItem(),getSongs(playlistsView.getSelectionModel().getSelectedItem()));
                 viewController.setSong(getSong(name));
 
                 Stage stage = new Stage();
                 stage.setTitle("Viewing Searched Song");
-                stage.setScene(new Scene(root));
+                stage.setScene(new Scene(root,320,550));
                 stage.show();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -435,34 +454,48 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     }
 
     @Override
-    public void getAllSongs() {
+    public List<Songs> getAllSongs() {
+        List<Songs> songs = new ArrayList<>();
         String sql = "SELECT * FROM Songs";
         try(Connection conn = DBConnect.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                int songId = rs.getInt("SongID");
+                String title = rs.getString("Title");
+                String artist = rs.getString("Artist");
+                String album = rs.getString("Album");
+                String genre = rs.getString("Genre");
+                String length = rs.getString("Length");
+
+                Songs song = new Songs(title,artist,album,genre,length);
+                song.setId(songId);
+
+                songs.add(song);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return songs;
     }
 
     @FXML
     private void clickShowSongs() {
-        showSongs.setOnAction(e -> {
-            try {
+
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
             Parent root = loader.load();
 
             ViewController viewController = loader.getController();
-            viewController.setSongsListView(songsInPlaylist);
+            viewController.setSongsListView(getAllSongs());
 
             Stage stage = new Stage();
             stage.setTitle("Viewing all Songs");
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root,320,550));
             stage.show();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        });
     }
 
     @Override
@@ -470,11 +503,16 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
         String sql = "SELECT * FROM Playlists WHERE Name = ?";
         try(Connection conn = DBConnect.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1,name);
+            stmt.setString(1,name.trim());
             try(ResultSet rs = stmt.executeQuery()) {
                 if(rs.next()) {
+                    int playlistId = rs.getInt("PlaylistID");
                     String playlistName = rs.getString("Name");
-                    return new Playlists(playlistName);
+                    String playlistDescription = rs.getString("Description");
+
+                    Playlists playlist = new Playlists(playlistName,playlistDescription);
+                    playlist.setId(playlistId);
+                    return playlist;
                 }
             }
         } catch (SQLException e) {
@@ -500,18 +538,18 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
                 dialog.setTitle("Error");
                 dialog.setHeaderText("Input error");
             }
-            try {
             namePopup.close();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
-            Parent root = loader.load();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
+                Parent root = loader.load();
 
-            ViewController viewController = loader.getController();
-            viewController.setPlaylist(getPlaylist(name));
+                ViewController viewController = loader.getController();
+                viewController.setPlaylist(getPlaylist(name),getSongs(getPlaylist(name)));
 
-            Stage stage = new Stage();
-            stage.setTitle("Viewing Searched Playlist");
-            stage.setScene(new Scene(root));
-            stage.show();
+                Stage stage = new Stage();
+                stage.setTitle("Viewing Searched Playlist");
+                stage.setScene(new Scene(root, 320,550));
+                stage.show();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -519,14 +557,27 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     }
 
     @Override
-    public void getAllPlaylists() {
+    public List<Playlists> getAllPlaylists() {
+        List<Playlists> playlists = new ArrayList<>();
         String sql = "SELECT * FROM Playlists";
         try(Connection conn = DBConnect.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
+                int playlistId = rs.getInt("PlaylistID");
+                String name = rs.getString("Name");
+                String description = rs.getString("Description");
+
+                Playlists playlist = new Playlists(name,description);
+                playlist.setId(playlistId);
+
+                playlists.add(playlist);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return playlists;
     }
 
     @FXML
@@ -537,11 +588,11 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
                 Parent root = loader.load();
 
                 ViewController viewController = loader.getController();
-                viewController.setPlaylistsListView(playlistsView);
+                viewController.setPlaylistsListView(getAllPlaylists());
 
                 Stage stage = new Stage();
                 stage.setTitle("Viewing all Playlists");
-                stage.setScene(new Scene(root));
+                stage.setScene(new Scene(root, 320, 550));
                 stage.show();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
