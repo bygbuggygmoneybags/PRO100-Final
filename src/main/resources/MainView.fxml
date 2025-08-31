@@ -73,6 +73,9 @@
                 <Button fx:id="about" text="About">
 
                 </Button>
+                <Button fx:id="exit" text="Exit" onMouseClicked="#onExit">
+
+                </Button>
             </ToolBar>
         </top>
         <left>

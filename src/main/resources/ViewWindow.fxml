@@ -12,6 +12,16 @@
     <BorderPane fx:id="viewPane" prefHeight="320" prefWidth="550">
         <top>
             <ToolBar fx:id="toolBar">
+                <Button fx:id="export" text="Export" onMouseClicked="#onExport">
+                    <contextMenu>
+                        <ContextMenu fx:id="exportMenu">
+                            <items>
+                                <MenuItem fx:id="exportToHTML" text="Export to HTML" onAction="#clickExportHTML"/>
+                                <MenuItem fx:id="exportToPDF" text="Export to PDF" onAction="#clickExportPDF"/>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </Button>
                 <Button fx:id="exit" text="Exit" onMouseClicked="#onExit">
 
                 </Button>

@@ -39,18 +39,18 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     @FXML
     private Button about;
     @FXML
+    private Button exit;
+    @FXML
     private ContextMenu createMenu;
     @FXML
     private MenuItem createPlaylistButton;
     @FXML
     private void clickCreate(){
-        create.setOnMouseClicked(e -> {
             if(createMenu.isShowing()) {
                 createMenu.hide();
             } else {
                 createMenu.show(create, Side.BOTTOM,0,0);
             }
-        });
     }
 
     @Override
@@ -147,13 +147,11 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     private MenuItem remove;
     @FXML
     private void clickEdit() {
-        edit.setOnMouseClicked(e -> {
-            if(editMenu.isShowing()) {
-                editMenu.hide();
-            } else {
-                editMenu.show(edit, Side.BOTTOM,0,0);
-            }
-        });
+        if(editMenu.isShowing()) {
+            editMenu.hide();
+        } else {
+            editMenu.show(edit, Side.BOTTOM,0,0);
+        }
     }
 
     private void showSongsInPlaylist(Playlists playlist) {
@@ -374,22 +372,12 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
     @FXML
     private ContextMenu viewMenu;
     @FXML
-    private MenuItem showSong;
-    @FXML
-    private MenuItem showSongs;
-    @FXML
-    private MenuItem showPlaylist;
-    @FXML
-    private MenuItem showPlaylists;
-    @FXML
     private void clickView() {
-        view.setOnMouseClicked(e -> {
-            if(viewMenu.isShowing()) {
-                viewMenu.hide();
-            } else {
-                viewMenu.show(view, Side.BOTTOM,0, 0);
-            }
-        });
+        if(viewMenu.isShowing()) {
+            viewMenu.hide();
+        } else {
+            viewMenu.show(view, Side.BOTTOM,0, 0);
+        }
     }
 
     @Override
@@ -418,7 +406,6 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
     @FXML
     private void clickShowSong() {
-        showSong.setOnAction (e -> {
             String name = "";
 
             TextInputDialog namePopup = new TextInputDialog();
@@ -450,7 +437,6 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-        });
     }
 
     @Override
@@ -481,7 +467,6 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
     @FXML
     private void clickShowSongs() {
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
             Parent root = loader.load();
@@ -523,7 +508,6 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
     @FXML
     private void clickShowPlaylist() {
-        showPlaylist.setOnAction(e -> {
             String name = "";
 
             TextInputDialog namePopup = new TextInputDialog();
@@ -553,7 +537,6 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        });
     }
 
     @Override
@@ -582,7 +565,6 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
     @FXML
     private void clickShowPlaylists() {
-        showPlaylists.setOnAction(e -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewWindow.fxml"));
                 Parent root = loader.load();
@@ -597,6 +579,10 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-        });
+    }
+    @FXML
+    private void onExit() {
+        Stage stage = (Stage)toolBarPane.getScene().getWindow();
+        stage.close();
     }
 }
