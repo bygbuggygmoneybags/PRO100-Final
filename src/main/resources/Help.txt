@@ -1,0 +1,57 @@
+Help Menu
+
+Hi! This is the help menu. This is where you'll find in depth descriptions of all the features of the playlist manager.
+
+
+CREATE:
+
+The create menu is where you'll go to create your playlists. This menu is short and sweet and purely intended for inserting playlists into your database of playlists.
+	Create Playlist - 
+		Upon creating a playlist, a dialog will appear prompting you to enter a name for your playlist. Press Enter in order to submit your input. Then, another dialog will appear prompting you to write a short description for the playlist. You do not necessarily have to enter a description for the playlist but writing a description helps make your playlists distinct. Press Enter to submit. You can also technically keep the title of the playlist blank. However, this will make certain other features, such as retrieving said playlist using the Search Playlist function, unavailable, which can complicate navigating a large list of playlists.
+
+
+
+
+EDIT:
+
+The edit menu allows you to edit playlists, adding or removing songs, and removing playlists.
+	Add Song -
+		This option will not initially be available to you if you do not have a playlist selected. If this option is greyed out in the dropdown, simply click on a playlist in the Playlists table and then click on the edit button again. Upon selecting the "Add Song" button, several dialogs will appear, prompting you to enter various inputs. It will request a title, an artist, the album the song is in (if the song does not belong to an album, simply type "Single"), the genre of the song, and the song length. Press Enter on every dialog to submit your input. You are free to leave any field blank except for the title. Without a title, you will not be able to search songs, which is not ideal for long playlists.
+	
+	Remove from Playlist -
+		This option will always be available to you. Once clicked, you will receive a dialog prompting you to enter the name of the song you wish to remove. Upon pressing Enter, the song you requested to be deleted will be deleted both from the list of songs in the playlist, as well as the list of all songs.
+
+	Remove Playlist -
+		This option will not initially be available if a playlist is not selected. If this option is greyed out, click on the playlist you wish to remove in the Playlists table and click the edit button again. Then, the selected playlist will be deleted. 
+
+
+
+VIEW:
+	This menu will prompt the application to open a new window that displays the requested data.
+
+	Search Song -
+		This option will prompt a dialog to appear that asks you to enter the name of the song you wish to display. Upon pressing Enter, the view window will appear, displaying all details of the song you searched.
+
+	Show All Songs -
+		This option will immediately open the view window, displaying every single song you've entered in the application, neatly displaying all the information of each song in a table.
+
+	Search Playlist -
+		This option will prompt a dialog to appear that asks you to enter the name of the playlist you wish to display. Upon pressing Enter, the view window will open, displaying the name and description of the playlist you searched, as well as the list of songs contained in said playlist.
+
+	Show All Playlists - 
+		This option will immediately open the view window, displaying every single playlist that you've entered into the application neatly in a table.
+	
+View Window:
+	This section concerns all the options contained in the view window.
+
+	Export - 
+		This will prompt a dropdown menu to appear, allowing you to select from exporting to an HTML file or exporting to a PDF.
+		
+		Export to HTML - 
+			Upon clicking this option, if the view option you selected was to show all songs or all playlists, the application will open up your file dialog, allowing you to navigate to the directory you wish to save your HTML file to. Upon navigating to the directory, enter a name for your file and then either click Save or press Enter. This will save the file to your device, exporting the data (either all playlists and their respective lists of songs or simply a list of all songs) to the file.
+
+		Export to PDF - 
+			Upon clicking this option, if the view option you selected was to show all songs or all playlists, the application will open up your file dialog, allowing you to navigate to the directory you wish to save your PDF file to. Upon navigating to the directory, enter a name for your file and then either click save or press Enter. This will save the file to your device (either all playlists and their respective lists of songs or simply a list of all songs) to the file.
+
+	Exit -
+		Clicking this option will close the view window.
