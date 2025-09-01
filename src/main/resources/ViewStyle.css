@@ -1,0 +1,47 @@
+.root {
+    -fx-background-color: #4959B1;
+}
+
+.tool-bar {
+    -fx-background-color: #6577E6;
+}
+
+.list-view {
+    -fx-background-color: #377575;
+}
+
+.list-cell{
+    -fx-background-color: #377575;
+    -fx-text-fill: white;
+    -fx-border-color: grey grey white grey;
+}
+
+.list-cell:selected {
+    -fx-background-color: #3A7AA7;
+    -fx-font-weight: bold;
+    -fx-border-width: 0 0 2 0;
+}
+
+.button {
+    -fx-background-color: #A883FF;
+    -fx-border-color: #5158B5;
+}
+
+.button:hover {
+    -fx-background-color: #C3B1E1;
+    -fx-font-weight: bold;
+}
+
+.context-menu {
+    -fx-background-color: #555;
+    -fx-font-color: white;
+}
+
+.menu-item {
+    -fx-background-color: #777777;
+}
+
+.menu-item:hover {
+    -fx-background-color: grey;
+    -fx-font-weight: bold;
+}

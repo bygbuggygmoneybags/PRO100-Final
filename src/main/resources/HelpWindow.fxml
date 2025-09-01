@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="csc180.rodriguez.g.grodriguezfinal.controllers.HelpController"
+            prefHeight="550" prefWidth="750.0" stylesheets="HelpStyle.css">
+            <BorderPane fx:id="helpPane" prefHeight="550" prefWidth="750">
+                <top>
+                    <ToolBar>
+                        <Button fx:id="exit" text="Exit" onMouseClicked="#onExit"/>
+                    </ToolBar>
+                </top>
+                <center>
+                    <TextArea fx:id="helpText"/>
+                </center>
+            </BorderPane>
+</AnchorPane>

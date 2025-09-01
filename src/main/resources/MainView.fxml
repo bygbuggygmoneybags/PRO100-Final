@@ -9,19 +9,17 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.StackPane?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="csc180.rodriguez.g.grodriguezfinal.controllers.PlaylistController">
+      fx:controller="csc180.rodriguez.g.grodriguezfinal.controllers.PlaylistController" stylesheets="MainStyle.css">
     <padding>
         <Insets bottom="20.0"/>
     </padding>
-    <BorderPane fx:id="toolBarPane" prefHeight="1000" prefWidth="850">
+    <BorderPane fx:id="toolBarPane" prefHeight="850" prefWidth="1000">
         <top>
             <ToolBar fx:id="toolBar">
                 <Button fx:id="create" text="Create" onMouseClicked="#clickCreate">
                     <contextMenu>
-                        <ContextMenu fx:id="createMenu" >
+                        <ContextMenu fx:id="createMenu">
                             <items>
                                 <MenuItem fx:id="createPlaylistButton" text="Create Playlist" onAction="#clickCreatePlaylist">
 
@@ -67,10 +65,10 @@
                         </ContextMenu>
                     </contextMenu>
                 </Button>
-                <Button fx:id="help" text="Help">
+                <Button fx:id="help" text="Help" onMouseClicked="#onHelp">
 
                 </Button>
-                <Button fx:id="about" text="About">
+                <Button fx:id="about" text="About" onMouseClicked="#onAbout">
 
                 </Button>
                 <Button fx:id="exit" text="Exit" onMouseClicked="#onExit">
@@ -79,7 +77,7 @@
             </ToolBar>
         </top>
         <left>
-            <ListView fx:id="playlistsView" maxWidth="750" maxHeight="500" visible="true" BorderPane.alignment="TOP_LEFT">
+            <ListView fx:id="playlistsView" maxWidth="750" maxHeight="500" BorderPane.alignment="TOP_LEFT">
 
             </ListView>
         </left>

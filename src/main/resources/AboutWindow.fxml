@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="csc180.rodriguez.g.grodriguezfinal.controllers.AboutController"
+            fx:id="aboutPane" prefHeight="550" prefWidth="750" stylesheets="AboutStyle.css">
+    <top>
+        <ToolBar fx:id="toolBar">
+            <Button fx:id="exit" text="Exit" onMouseClicked="#onExit"/>
+        </ToolBar>
+    </top>
+    <center>
+        <VBox prefHeight="550" prefWidth="750" alignment="CENTER">
+            <Label text="Playlist Manager Application"/>
+            <Label text="Developed by G Rodriguez-Rubio"/>
+            <Label text="Developed as the final project for Introductory Software Projects (PRO100)"/>
+            <Label text="Built using Java, JavaFX, and SQLite"/>
+            <Hyperlink fx:id="link" text="https://github.com/bygbuggygmoneybags/PRO100-Final" onMouseClicked="#onLink"/>
+        </VBox>
+    </center>
+</BorderPane>

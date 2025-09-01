@@ -432,7 +432,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
                 Stage stage = new Stage();
                 stage.setTitle("Viewing Searched Song");
-                stage.setScene(new Scene(root,320,550));
+                stage.setScene(new Scene(root,750,550));
                 stage.show();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -476,7 +476,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
             Stage stage = new Stage();
             stage.setTitle("Viewing all Songs");
-            stage.setScene(new Scene(root,320,550));
+            stage.setScene(new Scene(root,750,550));
             stage.show();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -532,7 +532,7 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
                 Stage stage = new Stage();
                 stage.setTitle("Viewing Searched Playlist");
-                stage.setScene(new Scene(root, 320,550));
+                stage.setScene(new Scene(root, 750,550));
                 stage.show();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -574,11 +574,39 @@ public class PlaylistController implements PlaylistFunction, SongFunction, Playl
 
                 Stage stage = new Stage();
                 stage.setTitle("Viewing all Playlists");
-                stage.setScene(new Scene(root, 320, 550));
+                stage.setScene(new Scene(root, 750, 550));
                 stage.show();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+    }
+    @FXML
+    private void onHelp() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HelpWindow.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Help Menu");
+            stage.setScene(new Scene(root, 750,550));
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    @FXML
+    private void onAbout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AboutWindow.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("About Menu");
+            stage.setScene(new Scene(root, 750,550));
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
     @FXML
     private void onExit() {

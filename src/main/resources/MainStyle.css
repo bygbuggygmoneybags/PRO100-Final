@@ -1,0 +1,61 @@
+.root {
+    -fx-background-color: linear-gradient(#1E3C72, #2A5298);
+}
+
+.tool-bar {
+    -fx-background-color: #6577E6;
+}
+
+.list-view {
+    -fx-background-color: linear-gradient(#377575, #3A7AA7);
+}
+
+.list-cell{
+    -fx-background-color: #3B7BB7;
+    -fx-text-fill: white;
+    -fx-border-color: grey grey white grey;
+}
+
+.list-cell:selected {
+    -fx-background-color: cyan;
+    -fx-font-weight: bold;
+    -fx-border-width: 0 0 2 0;
+}
+
+.button {
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-background-color: #A883FF;
+    -fx-text-fill: white;
+    -fx-border-color: #5158B5;
+}
+
+.button:hover {
+    -fx-background-color: #C3B1E1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.context-menu {
+    -fx-background-color: #2A5298;
+    -fx-text-fill: white;
+}
+
+.menu-item:disabled {
+    -fx-background-color: #3A5298;
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+.menu-item:hover {
+    -fx-background-color: #6577E6;
+    -fx-font-weight: bold;
+}
+

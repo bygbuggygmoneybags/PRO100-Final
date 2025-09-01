@@ -1,0 +1,25 @@
+.root {
+    -fx-background-color: linear-gradient(#1E3C72, #2A5298);
+}
+
+.tool-bar {
+    -fx-background-color: #6577E6;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-background-color: #A883FF;
+    -fx-text-fill: white;
+    -fx-border-color: #5158B5;
+}
+
+.button:hover {
+    -fx-background-color: #C3B1E1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

@@ -7,6 +7,7 @@ module csc180.rodriguez.g.grodriguezfinal {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires org.apache.pdfbox;
+    requires java.desktop;
 
     exports csc180.rodriguez.g.grodriguezfinal.views;
     exports csc180.rodriguez.g.grodriguezfinal.controllers;
