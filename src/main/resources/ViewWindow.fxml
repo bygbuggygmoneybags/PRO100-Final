@@ -28,9 +28,9 @@
             </ToolBar>
         </top>
         <center>
-            <ListView fx:id="songsInPlaylist"/>
-            <ListView fx:id="playlistsListView"/>
-            <ListView fx:id="songsListView"/>
+            <ListView fx:id="songsInPlaylist" visible="false"/>
+            <ListView fx:id="playlistsListView" visible="false"/>
+            <ListView fx:id="songsListView" visible="false"/>
             <Label fx:id="songLabel"/>
             <Label fx:id="playlistLabel"/>
         </center>

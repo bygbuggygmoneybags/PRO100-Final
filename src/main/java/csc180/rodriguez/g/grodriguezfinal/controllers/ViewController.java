@@ -24,7 +24,6 @@ import java.util.List;
 public class ViewController {
     private Playlists playlist;
     private Songs song;
-
     @FXML
     private ListView<Songs> songsInPlaylist;
     @FXML
@@ -50,7 +49,7 @@ public class ViewController {
         this.playlist = playlist;
         playlistLabel.setText(playlist.toString());
         songsInPlaylist.getItems().setAll(songs);
-
+        songsInPlaylist.setVisible(true);
         viewPane.setCenter(playlistLabel);
         viewPane.setBottom(songsInPlaylist);
     }
@@ -58,19 +57,21 @@ public class ViewController {
     public void setSong(Songs song) {
         this.song = song;
         songLabel.setText(song.toString());
-
+        songsInPlaylist.setVisible(false);
+        songsListView.setVisible(false);
+        playlistsListView.setVisible(false);
         viewPane.setCenter(songLabel);
     }
 
     public void setSongsListView(List<Songs> songs) {
         songsListView.getItems().setAll(songs);
-
+        songsListView.setVisible(true);
         viewPane.setCenter(songsListView);
     }
 
     public void setPlaylistsListView(List<Playlists> playlists) {
         playlistsListView.getItems().setAll(playlists);
-
+        playlistsListView.setVisible(true);
         viewPane.setCenter(playlistsListView);
     }
 
